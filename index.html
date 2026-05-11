@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satia Dental Clinic – Hanumangarh Junction</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #C0202A;
+    --red-dark: #8B1219;
+    --red-deep: #5C0B11;
+    --red-light: #E8353F;
+    --red-pale: #FDF0F0;
+    --red-soft: #FAD9DA;
+    --gold: #D4AF6A;
+    --gold-light: #EDD08A;
+    --dark: #1A0608;
+    --mid: #3D1217;
+    --text: #1E0709;
+    --muted: #7A4448;
+    --white: #FFFAFA;
+    --cream: #FEF6F6;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ─── CURSOR ─── */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--red-light);
+    border-radius: 50%; position: fixed;
+    pointer-events: none; z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--red-light);
+    border-radius: 50%; position: fixed;
+    pointer-events: none; z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: left 0.12s ease, top 0.12s ease, width 0.3s, height 0.3s, border-color 0.3s;
+    opacity: 0.6;
+  }
+
+  /* ─── LOADER ─── */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; flex-direction: column; gap: 2rem;
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+  }
+  #loader.hide { opacity: 0; visibility: hidden; }
+
+  .loader-cross {
+    position: relative; width: 70px; height: 70px;
+    animation: crossSpin 2s ease-in-out infinite;
+  }
+  @keyframes crossSpin {
+    0%   { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  .loader-bar-h, .loader-bar-v {
+    position: absolute; background: var(--red-light);
+    border-radius: 4px;
+  }
+  .loader-bar-h { width: 70px; height: 18px; top: 26px; left: 0; }
+  .loader-bar-v { width: 18px; height: 70px; top: 0; left: 26px; }
+
+  .loader-text {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold); font-size: 1.3rem; letter-spacing: 4px;
+    text-transform: uppercase;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .loader-sub { font-size: 0.75rem; letter-spacing: 3px; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(26,6,8,0.93);
+    backdrop-filter: blur(14px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 5rem;
+    border-bottom: 1px solid rgba(212,175,106,0.2);
+    transform: translateY(-100%);
+    animation: slideDown 0.6s 1.9s ease forwards;
+  }
+  @keyframes slideDown { to { transform: translateY(0); } }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--white); font-size: 1.35rem; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .nav-logo span { color: var(--gold); }
+  .logo-cross { width: 28px; height: 28px; position: relative; flex-shrink: 0; }
+  .logo-cross::before, .logo-cross::after {
+    content: ''; position: absolute; background: var(--red-light); border-radius: 2px;
+  }
+  .logo-cross::before { width: 28px; height: 8px; top: 10px; left: 0; }
+  .logo-cross::after  { width: 8px; height: 28px; top: 0; left: 10px; }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.65); text-decoration: none;
+    font-size: 0.88rem; letter-spacing: 0.3px; transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1.5px; background: var(--gold);
+    transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-cta {
+    background: var(--red); color: white; border: none;
+    padding: 0.65rem 1.6rem; border-radius: 4px;
+    font-family: 'Outfit', sans-serif; font-weight: 500;
+    font-size: 0.88rem; cursor: pointer; letter-spacing: 0.3px;
+    transition: all 0.3s; border-bottom: 2px solid var(--red-dark);
+  }
+  .nav-cta:hover { background: var(--red-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(192,32,42,0.4); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    background: var(--dark);
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    align-items: center; padding: 8rem 5rem 5rem;
+    position: relative; overflow: hidden;
+    gap: 3rem;
+  }
+
+  /* animated bg lines */
+  .hero-lines {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .hline {
+    position: absolute; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,32,42,0.25), transparent);
+    animation: scanLine 6s ease-in-out infinite;
+  }
+  .hline:nth-child(1) { width: 60%; top: 20%; left: -60%; animation-delay: 0s; }
+  .hline:nth-child(2) { width: 45%; top: 55%; left: -45%; animation-delay: 2s; }
+  .hline:nth-child(3) { width: 55%; top: 80%; left: -55%; animation-delay: 4s; }
+  @keyframes scanLine { 0%{left:-100%} 100%{left:200%} }
+
+  .hero-bg-circle {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(circle, rgba(192,32,42,0.14) 0%, transparent 70%);
+    animation: breathe 5s ease-in-out infinite;
+  }
+  .hero-bg-circle.c1 { width: 600px; height: 600px; top: -20%; right: -10%; }
+  .hero-bg-circle.c2 { width: 300px; height: 300px; bottom: -10%; left: 5%; animation-delay: 2.5s; opacity: 0.5; }
+  @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.75rem;
+    opacity: 0; animation: fadeUp 0.6s 2.1s ease forwards;
+  }
+  .eyebrow-line { width: 36px; height: 1.5px; background: var(--red-light); }
+  .eyebrow-text {
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2.5px;
+    color: var(--red-light); font-weight: 500;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 700;
+    color: var(--white); line-height: 1.1; margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.7s 2.3s ease forwards;
+  }
+  .hero h1 .accent { color: var(--red-light); display: block; }
+  .hero h1 .gold { color: var(--gold); }
+
+  .hero-desc {
+    font-size: 1rem; color: rgba(255,255,255,0.55); line-height: 1.8;
+    max-width: 460px; margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.7s 2.5s ease forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.7s 2.7s ease forwards;
+  }
+  .btn-red {
+    background: var(--red); color: white;
+    border: none; padding: 0.95rem 2.2rem;
+    border-radius: 4px; font-weight: 500; font-size: 0.95rem;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: all 0.3s; border-bottom: 2px solid var(--red-dark);
+    letter-spacing: 0.2px;
+  }
+  .btn-red:hover { background: var(--red-light); transform: translateY(-3px); box-shadow: 0 14px 35px rgba(192,32,42,0.35); }
+  .btn-outline {
+    background: transparent; color: white;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.95rem 2.2rem; border-radius: 4px;
+    font-weight: 400; font-size: 0.95rem;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: all 0.3s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-stats {
+    display: flex; gap: 0; margin-top: 3.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 2rem;
+    opacity: 0; animation: fadeUp 0.7s 2.9s ease forwards;
+  }
+  .hstat {
+    flex: 1; padding-right: 2rem;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .hstat:last-child { padding-right: 0; border-right: none; padding-left: 2rem; }
+  .hstat:nth-child(2) { padding-left: 2rem; }
+  .hstat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem; color: var(--red-light); font-weight: 700; line-height: 1;
+  }
+  .hstat-label { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.3rem; letter-spacing: 0.5px; }
+
+  /* hero right */
+  .hero-right {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; animation: fadeIn 1s 2.6s ease forwards;
+  }
+  .tooth-frame {
+    position: relative; width: 360px; height: 420px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tooth-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(192,32,42,0.2) 0%, transparent 65%);
+    border-radius: 50%;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  @keyframes glowPulse { 0%,100%{opacity:0.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
+
+  .tooth-svg-wrap { animation: floatTooth 4s ease-in-out infinite; z-index: 2; }
+  @keyframes floatTooth {
+    0%,100%{transform:translateY(0) rotate(-1.5deg)}
+    50%{transform:translateY(-18px) rotate(1.5deg)}
+  }
+
+  .corner-badge {
+    position: absolute; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(212,175,106,0.3);
+    border-radius: 12px; padding: 0.85rem 1.1rem;
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; gap: 0.65rem;
+    animation: floatBadge 3.5s ease-in-out infinite;
+  }
+  .corner-badge.tl { top: 10px; left: -20px; animation-delay: 0s; }
+  .corner-badge.br { bottom: 20px; right: -10px; animation-delay: 1.7s; }
+  @keyframes floatBadge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .cb-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(192,32,42,0.3); display: flex; align-items: center; justify-content: center; }
+  .cb-icon svg { width: 16px; height: 16px; color: var(--red-light); }
+  .cb-num { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: white; line-height: 1; }
+  .cb-text { font-size: 0.72rem; color: rgba(255,255,255,0.45); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:none} }
+  @keyframes fadeIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+
+  /* ─── TICKER ─── */
+  .ticker {
+    background: var(--red); padding: 0.8rem 0; overflow: hidden;
+    position: relative;
+  }
+  .ticker::before, .ticker::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 80px;
+    z-index: 2;
+  }
+  .ticker::before { left: 0; background: linear-gradient(90deg, var(--red), transparent); }
+  .ticker::after  { right: 0; background: linear-gradient(-90deg, var(--red), transparent); }
+  .ticker-inner {
+    display: inline-flex; gap: 0;
+    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.9);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 2.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .ticker-item::after { content: '✦'; color: rgba(255,255,255,0.35); font-size: 0.6rem; }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ─── SHARED ─── */
+  section { padding: 6rem 5rem; }
+  .sec-tag {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px;
+    color: var(--red); font-weight: 500; margin-bottom: 0.6rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .sec-tag::before { content: ''; display: inline-block; width: 24px; height: 1.5px; background: var(--red); }
+  .sec-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 700;
+    color: var(--dark); line-height: 1.15; margin-bottom: 1rem;
+  }
+  .sec-sub { color: var(--muted); font-size: 0.97rem; line-height: 1.75; max-width: 520px; }
+
+  /* ─── SERVICES ─── */
+  .services-sec { background: var(--cream); }
+  .services-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; flex-wrap: wrap; gap: 2rem; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+  .svc-card {
+    background: white; border-radius: 12px;
+    padding: 2rem 1.75rem;
+    border: 1px solid rgba(192,32,42,0.07);
+    transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+    position: relative; overflow: hidden; cursor: default;
+  }
+  .svc-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(192,32,42,0.04) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.35s;
+  }
+  .svc-card:hover { transform: translateY(-10px); box-shadow: 0 24px 55px rgba(192,32,42,0.1); border-color: rgba(192,32,42,0.2); }
+  .svc-card:hover::after { opacity: 1; }
+
+  .svc-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 700; color: rgba(192,32,42,0.08);
+    line-height: 1; margin-bottom: -0.5rem;
+    transition: color 0.35s;
+  }
+  .svc-card:hover .svc-num { color: rgba(192,32,42,0.15); }
+  .svc-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: var(--red-pale); border: 1px solid rgba(192,32,42,0.12);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.1rem; transition: all 0.35s;
+  }
+  .svc-card:hover .svc-icon { background: var(--red); border-color: var(--red); }
+  .svc-icon svg { width: 24px; height: 24px; color: var(--red); transition: color 0.35s; }
+  .svc-card:hover .svc-icon svg { color: white; }
+  .svc-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.55rem; color: var(--dark); }
+  .svc-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+  .svc-arrow {
+    margin-top: 1.25rem; font-size: 0.82rem; color: var(--red);
+    display: flex; align-items: center; gap: 0.4rem;
+    font-weight: 500; opacity: 0; transform: translateX(-8px);
+    transition: all 0.3s;
+  }
+  .svc-card:hover .svc-arrow { opacity: 1; transform: none; }
+
+  /* ─── ABOUT ─── */
+  .about-sec {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+  }
+  .about-visual { position: relative; }
+  .about-main-box {
+    background: linear-gradient(135deg, var(--red-deep) 0%, var(--red-dark) 50%, var(--red) 100%);
+    border-radius: 16px; padding: 3.5rem 3rem;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 400px; position: relative; overflow: hidden;
+  }
+  .about-main-box::before {
+    content: ''; position: absolute; top: -30%; right: -30%;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.05); border-radius: 50%;
+  }
+  .about-main-box::after {
+    content: ''; position: absolute; bottom: -20%; left: -15%;
+    width: 150px; height: 150px;
+    background: rgba(212,175,106,0.1); border-radius: 50%;
+  }
+  .about-tooth-svg { animation: float2 4.5s ease-in-out infinite; z-index: 2; position: relative; }
+  @keyframes float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+
+  .about-float {
+    position: absolute; background: white;
+    border-radius: 12px; padding: 1rem 1.25rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .about-float.af1 { top: -1.5rem; right: -2rem; animation: floatBadge 4s ease-in-out infinite; }
+  .about-float.af2 { bottom: -1.5rem; left: -2rem; animation: floatBadge 4s 2s ease-in-out infinite; }
+  .af-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--red-pale); display: flex; align-items: center; justify-content: center; }
+  .af-icon svg { width: 18px; height: 18px; color: var(--red); }
+  .af-num { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--dark); line-height: 1; }
+  .af-text { font-size: 0.75rem; color: var(--muted); }
+
+  .about-content .sec-title { color: var(--dark); }
+  .feature-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .feat {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.25rem; border-radius: 10px;
+    border: 1px solid rgba(192,32,42,0.07);
+    transition: all 0.3s; background: white;
+  }
+  .feat:hover { border-color: rgba(192,32,42,0.2); box-shadow: 0 6px 20px rgba(192,32,42,0.07); transform: translateX(4px); }
+  .feat-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--red-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .feat-icon svg { width: 18px; height: 18px; color: var(--red); }
+  .feat h4 { font-weight: 500; font-size: 0.93rem; margin-bottom: 0.15rem; }
+  .feat p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testi-sec {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--red-deep) 100%);
+    position: relative; overflow: hidden;
+  }
+  .testi-sec::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C0202A' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  .testi-sec .sec-tag { color: var(--gold-light); }
+  .testi-sec .sec-tag::before { background: var(--gold-light); }
+  .testi-sec .sec-title { color: white; }
+  .testi-sec .sec-sub { color: rgba(255,255,255,0.45); }
+
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+  .testi-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 1.75rem;
+    position: relative; transition: all 0.35s;
+  }
+  .testi-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(192,32,42,0.4); transform: translateY(-6px); }
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; color: var(--red); line-height: 0.7;
+    margin-bottom: 0.5rem; display: block; opacity: 0.7;
+  }
+  .testi-text { font-size: 0.93rem; color: rgba(255,255,255,0.68); line-height: 1.75; margin-bottom: 1.5rem; }
+  .testi-stars { display: flex; gap: 3px; margin-bottom: 1rem; }
+  .star-red { color: var(--red-light); font-size: 0.9rem; }
+  .testi-author { display: flex; align-items: center; gap: 0.75rem; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 1rem; }
+  .t-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red-light), var(--red-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.9rem; color: white;
+  }
+  .t-name { font-weight: 500; font-size: 0.9rem; color: white; }
+  .t-loc { font-size: 0.76rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
+
+  /* ─── CONTACT ─── */
+  .contact-sec {
+    background: var(--cream);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+  }
+  .contact-info-list { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2.5rem; }
+  .ci {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1.25rem 1.25rem; background: white;
+    border-radius: 12px; border: 1px solid rgba(192,32,42,0.07);
+    transition: all 0.3s;
+  }
+  .ci:hover { border-color: rgba(192,32,42,0.2); box-shadow: 0 8px 25px rgba(192,32,42,0.07); }
+  .ci-ico {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: var(--red-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .ci-ico svg { width: 20px; height: 20px; color: var(--red); }
+  .ci-lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+  .ci-val { font-weight: 500; color: var(--dark); margin-top: 0.2rem; line-height: 1.5; font-size: 0.95rem; }
+
+  .contact-form-box {
+    background: white; border-radius: 16px; padding: 2.5rem;
+    border: 1px solid rgba(192,32,42,0.07);
+    box-shadow: 0 20px 60px rgba(192,32,42,0.06);
+  }
+  .cf-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--dark); margin-bottom: 0.35rem; }
+  .cf-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; }
+  .fg { margin-bottom: 1.15rem; }
+  .fg label { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--text); letter-spacing: 0.2px; }
+  .fg input, .fg select, .fg textarea {
+    width: 100%; border: 1.5px solid rgba(192,32,42,0.12);
+    border-radius: 8px; padding: 0.82rem 1rem;
+    font-family: 'Outfit', sans-serif; font-size: 0.93rem;
+    color: var(--text); background: var(--cream);
+    outline: none; transition: all 0.3s;
+  }
+  .fg input:focus, .fg select:focus, .fg textarea:focus {
+    border-color: var(--red); background: white;
+    box-shadow: 0 0 0 3px rgba(192,32,42,0.1);
+  }
+  .fg textarea { resize: vertical; min-height: 95px; }
+  .fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .submit-btn {
+    width: 100%; background: var(--red); color: white; border: none;
+    padding: 1rem; border-radius: 8px;
+    font-family: 'Outfit', sans-serif; font-weight: 500;
+    font-size: 0.97rem; cursor: pointer; letter-spacing: 0.3px;
+    transition: all 0.3s; border-bottom: 2px solid var(--red-dark);
+  }
+  .submit-btn:hover { background: var(--red-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(192,32,42,0.3); }
+
+  /* ─── EMERGENCY BANNER ─── */
+  .emergency {
+    background: var(--red); padding: 2.5rem 5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  }
+  .emg-left { display: flex; align-items: center; gap: 1.5rem; }
+  .emg-pulse {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .emg-pulse::before {
+    content: ''; position: absolute; inset: -6px;
+    border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);
+    animation: emgRing 1.5s ease-out infinite;
+  }
+  @keyframes emgRing { 0%{transform:scale(1);opacity:1} 100%{transform:scale(1.6);opacity:0} }
+  .emg-pulse svg { width: 26px; height: 26px; color: white; }
+  .emg-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: white; }
+  .emg-text p { font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-top: 0.2rem; }
+  .btn-white {
+    background: white; color: var(--red);
+    border: none; padding: 0.85rem 2rem; border-radius: 6px;
+    font-weight: 600; font-size: 0.93rem; cursor: pointer;
+    transition: all 0.3s; white-space: nowrap;
+  }
+  .btn-white:hover { transform: scale(1.04); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dark); padding: 2.5rem 5rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .f-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: white; }
+  .f-logo span { color: var(--gold); }
+  .f-copy { font-size: 0.82rem; color: rgba(255,255,255,0.35); }
+  .f-links { display: flex; gap: 2rem; }
+  .f-links a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; }
+  .f-links a:hover { color: var(--gold); }
+
+  /* ─── REVEAL ─── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  .rd1{transition-delay:.1s} .rd2{transition-delay:.2s} .rd3{transition-delay:.3s}
+  .rd4{transition-delay:.4s} .rd5{transition-delay:.5s} .rd6{transition-delay:.6s}
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:900px){
+    nav{padding:1rem 1.5rem}
+    .nav-links{display:none}
+    .hero{grid-template-columns:1fr;padding:7rem 1.5rem 4rem}
+    .hero-right{display:none}
+    section{padding:4rem 1.5rem}
+    .services-grid,.testi-grid{grid-template-columns:1fr}
+    .about-sec,.contact-sec{grid-template-columns:1fr}
+    .about-visual{display:none}
+    footer,.emergency{padding:2rem 1.5rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-cross">
+    <div class="loader-bar-h"></div>
+    <div class="loader-bar-v"></div>
+  </div>
+  <div class="loader-text">Satia Dental</div>
+  <div class="loader-sub">Hanumangarh Junction</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-cross"></div>
+    <span>Satia</span> Dental Clinic
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book Appointment</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-lines">
+    <div class="hline"></div>
+    <div class="hline"></div>
+    <div class="hline"></div>
+  </div>
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Hanumangarh Junction, Rajasthan</span>
+    </div>
+    <h1>
+      Healthy Teeth,
+      <span class="accent">Confident</span>
+      <span class="gold">Smile.</span>
+    </h1>
+    <p class="hero-desc">Satia Dental Clinic brings compassionate, expert dental care to Hanumangarh Junction. Advanced technology, painless treatments, beautiful results — all under one roof.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-red">Book Free Consultation</a>
+      <a href="#services" class="btn-outline">Explore Services →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-num" data-target="12">12+</div>
+        <div class="hstat-label">Years Experience</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" data-target="4200">4200+</div>
+        <div class="hstat-label">Patients Treated</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" data-target="18">18+</div>
+        <div class="hstat-label">Services Offered</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="tooth-frame">
+      <div class="tooth-glow"></div>
+      <div class="tooth-svg-wrap">
+        <svg width="260" height="310" viewBox="0 0 260 310" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="130" cy="155" rx="100" ry="120" fill="rgba(192,32,42,0.07)"/>
+          <path d="M35 78C35 38 68 18 92 18C108 18 120 26 130 38C140 26 152 18 168 18C192 18 225 38 225 78C225 128 210 170 194 210C182 240 170 300 154 300C138 300 135 255 130 237C125 255 122 300 106 300C90 300 78 240 66 210C50 170 35 128 35 78Z" fill="url(#rGrad)"/>
+          <path d="M92 18C108 18 120 26 130 38C140 26 152 18 168 18" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M78 82C78 65 102 55 130 55C158 55 182 65 182 82" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M85 108C85 97 106 90 130 90C154 90 175 97 175 108" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="rGrad" x1="35" y1="18" x2="225" y2="300" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#E8353F"/>
+              <stop offset="45%" stop-color="#C0202A"/>
+              <stop offset="100%" stop-color="#6B0F16"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="corner-badge tl">
+        <div class="cb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <div><div class="cb-num">4200+</div><div class="cb-text">Happy patients</div></div>
+      </div>
+      <div class="corner-badge br">
+        <div class="cb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+        <div><div class="cb-num">12+</div><div class="cb-text">Years of trust</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Teeth Whitening</span>
+    <span class="ticker-item">Root Canal</span>
+    <span class="ticker-item">Dental Implants</span>
+    <span class="ticker-item">Braces & Aligners</span>
+    <span class="ticker-item">Smile Makeover</span>
+    <span class="ticker-item">Kids Dentistry</span>
+    <span class="ticker-item">Crowns & Bridges</span>
+    <span class="ticker-item">Gum Treatment</span>
+    <span class="ticker-item">Teeth Whitening</span>
+    <span class="ticker-item">Root Canal</span>
+    <span class="ticker-item">Dental Implants</span>
+    <span class="ticker-item">Braces & Aligners</span>
+    <span class="ticker-item">Smile Makeover</span>
+    <span class="ticker-item">Kids Dentistry</span>
+    <span class="ticker-item">Crowns & Bridges</span>
+    <span class="ticker-item">Gum Treatment</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services-sec" id="services">
+  <div class="services-header">
+    <div>
+      <div class="sec-tag reveal">Our Treatments</div>
+      <div class="sec-title reveal rd1">Comprehensive Care<br>For Every Smile</div>
+    </div>
+    <p class="sec-sub reveal rd2" style="margin:0">Modern dentistry delivered with warmth — from your first visit to your final result.</p>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card reveal rd1">
+      <div class="svc-num">01</div>
+      <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2C8 2 5 5 5 9c0 4 2 8 4 11 1 2 2 3 3 3s2-1 3-3c2-3 4-7 4-11 0-4-3-7-7-7z"/></svg></div>
+      <h3>Teeth Whitening</h3>
+      <p>Professional laser whitening treatment that delivers 6–8 shades brighter results in a single session.</p>
+      <div class="svc-arrow">Learn more →</div>
+    </div>
+    <div class="svc-card reveal rd2">
+      <div class="svc-num">02</div>
+      <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h3>Root Canal Treatment</h3>
+      <p>Pain-free RCT using advanced rotary tools under local anesthesia — save your natural tooth with precision.</p>
+      <div class="svc-arrow">Learn more →</div>
+    </div>
+    <div class="svc-card reveal rd3">
+      <div class="svc-num">03</div>
+      <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22V12M12 12L8 8M12 12L16 8"/><path d="M6 4h12"/></svg></div>
+      <h3>Dental Implants</h3>
+      <p>Permanent titanium implants that look and function exactly like natural teeth. Lifetime solution.</p>
+      <div class="svc-arrow">Learn more →</div>
+    </div>
+    <div class="svc-card reveal rd4">
+      <div class="svc-num">04</div>
+      <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg></div>
+      <h3>Braces & Aligners</h3>
+      <p>Traditional metal braces, clear ceramic, and invisible aligners to correct bite and alignment issues.</p>
+      <div class="svc-arrow">Learn more →</div>
+    </div>
+    <div class="svc-card reveal rd5">
+      <div class="svc-num">05</div>
+      <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <h3>Smile Makeover</h3>
+      <p>Veneers, bonding & contouring combined for a complete aesthetic transformation designed for your face.</p>
+      <div class="svc-arrow">Learn more →</div>
+    </div>
+    <div class="svc-card reveal rd6">
+      <div class="svc-num">06</div>
+      <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <h3>Kids Dentistry</h3>
+      <p>A friendly, gentle environment for children. Building lifelong dental health habits from the first tooth.</p>
+      <div class="svc-arrow">Learn more →</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-sec" id="about">
+  <div class="about-visual">
+    <div class="about-main-box">
+      <div class="about-tooth-svg">
+        <svg width="180" height="210" viewBox="0 0 180 210" fill="none">
+          <path d="M22 54C22 26 44 12 62 12C73 12 82 18 90 26C98 18 107 12 118 12C136 12 158 26 158 54C158 90 148 118 136 146C128 167 120 208 107 208C94 208 92 177 90 165C88 177 86 208 73 208C60 208 52 167 44 146C32 118 22 90 22 54Z" fill="white" opacity="0.95"/>
+          <path d="M62 12C73 12 82 18 90 26C98 18 107 12 118 12" stroke="rgba(192,32,42,0.3)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M52 58C52 46 68 40 90 40C112 40 128 46 128 58" stroke="rgba(192,32,42,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="about-float af1">
+        <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <div><div class="af-num">4200+</div><div class="af-text">Happy patients</div></div>
+      </div>
+      <div class="about-float af2">
+        <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div><div class="af-num">12+</div><div class="af-text">Years of trust</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="about-content">
+    <div class="sec-tag reveal">Why Satia Dental</div>
+    <div class="sec-title reveal rd1">Trusted by Hanumangarh Junction Since 2012</div>
+    <p class="sec-sub reveal rd2">We combine clinical excellence with genuine warmth. Every patient is treated like family — because your smile matters to us personally.</p>
+    <div class="feature-list">
+      <div class="feat reveal rd3">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <div><h4>Digital X-Ray & Laser Dentistry</h4><p>90% less radiation, instant results — the most precise diagnosis possible.</p></div>
+      </div>
+      <div class="feat reveal rd4">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div><h4>Experienced Specialists</h4><p>BDS & MDS qualified doctors with specialized training across all dental fields.</p></div>
+      </div>
+      <div class="feat reveal rd5">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <div><h4>Completely Painless</h4><p>Topical anesthesia + modern techniques = zero anxiety, zero discomfort.</p></div>
+      </div>
+      <div class="feat reveal rd6">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div><h4>Flexible Timing</h4><p>Mon–Sat 9 AM to 8 PM. Emergency care available. No long waiting queues.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-sec" id="reviews">
+  <div style="position:relative;z-index:2">
+    <div class="sec-tag reveal">Patient Stories</div>
+    <div class="sec-title reveal rd1">What Our Patients Say</div>
+    <p class="sec-sub reveal rd2">Real voices from real patients who trusted us with their most important smile.</p>
+    <div class="testi-grid">
+      <div class="testi-card reveal rd1">
+        <span class="quote-mark">"</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Satia Dental ne meri root canal bilkul dard ke bina ki. Staff bohot friendly hai aur doctor ka experience clearly dikhta hai. Highly recommended!</p>
+        <div class="testi-author">
+          <div class="t-avatar">MK</div>
+          <div><div class="t-name">Mahesh Kumar</div><div class="t-loc">Hanumangarh Junction</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal rd2">
+        <span class="quote-mark">"</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Got my smile makeover done here — veneers look absolutely stunning. People keep asking if I've always had such perfect teeth. Best investment ever!</p>
+        <div class="testi-author">
+          <div class="t-avatar">AJ</div>
+          <div><div class="t-name">Anjali Joshi</div><div class="t-loc">Sangaria</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal rd3">
+        <span class="quote-mark">"</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">My 7-year-old son used to cry at dentists. At Satia Dental, he actually smiled! The kids' section is wonderful. We're regular patients now. Thank you!</p>
+        <div class="testi-author">
+          <div class="t-avatar">RS</div>
+          <div><div class="t-name">Rekha Sharma</div><div class="t-loc">Hanumangarh Town</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGENCY BANNER -->
+<div class="emergency">
+  <div class="emg-left">
+    <div class="emg-pulse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.07 9.8 19.79 19.79 0 01.06 1.22 2 2 0 012.03 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+      </svg>
+    </div>
+    <div class="emg-text">
+      <h3>Dental Emergency? Call Now.</h3>
+      <p>Available for urgent care — toothache, fractures, accidents. Don't wait.</p>
+    </div>
+  </div>
+  <button class="btn-white">📞 +91 98765 43210</button>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-sec" id="contact">
+  <div>
+    <div class="sec-tag reveal">Visit Us</div>
+    <div class="sec-title reveal rd1">Book Your Appointment</div>
+    <p class="sec-sub reveal rd2">Walk in or book ahead — we're always ready to help you smile your best.</p>
+    <div class="contact-info-list">
+      <div class="ci reveal rd3">
+        <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div><div class="ci-lbl">Address</div><div class="ci-val">Satia Dental Clinic<br>Hanumangarh Junction, Rajasthan</div></div>
+      </div>
+      <div class="ci reveal rd4">
+        <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.06 1.22 2 2 0 012.03 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg></div>
+        <div><div class="ci-lbl">Phone</div><div class="ci-val">+91 98765 43210</div></div>
+      </div>
+      <div class="ci reveal rd5">
+        <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div><div class="ci-lbl">Hours</div><div class="ci-val">Mon–Sat: 9:00 AM – 8:00 PM<br>Sunday: Emergency Only</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal rd2">
+    <div class="contact-form-box">
+      <div class="cf-title">Request Appointment</div>
+      <div class="cf-sub">Free consultation for first-time patients</div>
+      <div class="fg-row">
+        <div class="fg"><label>First Name</label><input type="text" placeholder="Mahesh"></div>
+        <div class="fg"><label>Last Name</label><input type="text" placeholder="Kumar"></div>
+      </div>
+      <div class="fg"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"></div>
+      <div class="fg">
+        <label>Treatment Needed</label>
+        <select>
+          <option>Select treatment</option>
+          <option>Teeth Whitening</option>
+          <option>Root Canal Treatment</option>
+          <option>Dental Implants</option>
+          <option>Braces / Aligners</option>
+          <option>Smile Makeover</option>
+          <option>Crowns & Bridges</option>
+          <option>Kids Dentistry</option>
+          <option>Gum Treatment</option>
+          <option>General Checkup</option>
+        </select>
+      </div>
+      <div class="fg"><label>Message (optional)</label><textarea placeholder="Tell us about your concern..."></textarea></div>
+      <button class="submit-btn" onclick="handleBooking(event)">Confirm Appointment →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="f-logo"><span>Satia</span> Dental Clinic</div>
+    <div class="f-copy" style="margin-top:0.35rem">Hanumangarh Junction, Rajasthan &nbsp;·&nbsp; Est. 2012</div>
+  </div>
+  <div class="f-links">
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="f-copy">© 2026 Satia Dental Clinic. All rights reserved.</div>
+</footer>
+
+<script>
+  // Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('loader').classList.add('hide'), 1900);
+  });
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .svc-card, .feat, .ci').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '16px'; cursor.style.height = '16px';
+      ring.style.width = '52px'; ring.style.height = '52px';
+      ring.style.borderColor = 'var(--gold)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px'; cursor.style.height = '10px';
+      ring.style.width = '36px'; ring.style.height = '36px';
+      ring.style.borderColor = 'var(--red-light)';
+    });
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Counter
+  function animCount(el, target, suffix) {
+    let start = null;
+    const step = ts => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / 1600, 1);
+      el.textContent = Math.floor(p * target) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.hstat-num').forEach(n => {
+          const t = parseInt(n.dataset.target);
+          const s = n.textContent.includes('+') ? '+' : '';
+          animCount(n, t, s);
+        });
+        statsObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) statsObs.observe(heroStats);
+
+  // Form
+  function handleBooking(e) {
+    const b = e.target;
+    b.textContent = 'Booking...';
+    b.style.background = 'var(--red-light)';
+    setTimeout(() => { b.textContent = '✓ Appointment Confirmed!'; b.style.background = '#1E7B3E'; }, 1200);
+    setTimeout(() => { b.textContent = 'Confirm Appointment →'; b.style.background = 'var(--red)'; }, 3800);
+  }
+</script>
+</body>
+</html>
